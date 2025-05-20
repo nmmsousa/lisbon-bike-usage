@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: bike
+    database: bike-project-458013
+    schema: bike_project
+    tables:
+      - name: bike_lanes_data
+      - name: gira_station_locations
+      - name: bike_data_row
