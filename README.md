@@ -2,6 +2,8 @@
 This project analyzes the usage patterns of Lisbon's Gira bike-sharing system using public data. Technologies: Python, Kestra, dbt, Terraform , Looker Data Studio
 
 
+
+
 📌 Problem Statement & Project Description
 
 Urban mobility is a key factor in developing sustainable, livable cities. Lisbon has made major investments in bike-sharing infrastructure through the Gira system and expanded its network of dedicated bike lanes. However, understanding how, when, and where citizens use these services remains a challenge.
@@ -17,6 +19,8 @@ This project — Lisbon bike usage — aims to analyze real-time and historical 
   - Do usage patterns differ between weekdays and weekends or during working vs. non-working hours?
 
 Using a modern data stack (dbt, BigQuery, Kestra, Terraform), the project builds an automated data pipelines that collects, transforms, and analyzes bike availability real time data every 15 minutes. It models trends over time, enabling visualization and decision-making for urban planners, policy makers, and curious citizens.
+
+
 
 
 🧰 Technologies, Tools & Data Sources Used
@@ -41,13 +45,18 @@ Using a modern data stack (dbt, BigQuery, Kestra, Terraform), the project builds
 
   
 
+
+
 📊 Pipeline Diagram
   
   ![alt text](pipeline.png)
 
 
 
+
+
 🔄 Pipeline Explanation
+
 The pipeline is primarily orchestrated using Kestra, running inside Docker containers to ensure consistent, reproducible environments. The Docker image uses a lightweight Python 3.9 base image. For details on dependencies and environment setup, refer to the Dockercompose file and requirements.txt.
 
 Kestra manages the orchestration and scheduling of pipeline tasks, such as calling the Gira API, loading data into Google Cloud Storage (GCS), and triggering BigQuery loading and dbt transformations.
@@ -92,6 +101,9 @@ Main Pipeline Components and Functions
     - mart_station_infra_coverage: Combines bike station and bike lane data to create a village-level fact table showing key infrastructure metrics.
     - inc_bike_station_utilization_incremental: Aggregates bike station usage metrics over fixed 4-hour intervals, tracking availability of bikes and slots per station.
     - mart_peak_hours_analysis: Analyzes hourly patterns of bike usage per station by calculating changes in average free bikes over 4-hour time intervals and aggregating them across time dimensions.
+
+
+
 
 
 🚀 Step-by-Step Replication Guide
