@@ -1,15 +1,15 @@
 variable "cred" {
-  description = "my cred"
-  default     = "/home/nmmsousa/bike_project/keys/my-service-account-cred.json"
+  description = "you service account credentials json file"
+  default     = "path .json file"
 }
 
 variable "project" {
-  description = "my project"
-  default     = "bike-project-458013"
+  description = "The ID of the GCP project"
+  default     = "bike project name"
 }
 
 variable "region" {
-  description = "my region"
+  description = "The region to create the GCS bucket in"
   default     = "europe-west2"
 }
 
