@@ -3,13 +3,13 @@ __pycache__/
 *.pyc
 .env
 .env.*
-env
+env/
 
 # DBT
 dbt_packages/
 target/
 logs/
-dbt_env
+dbt_env/
 
 # Terraform
 .terraform/
