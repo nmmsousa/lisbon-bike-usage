@@ -2,12 +2,15 @@ Contents
 <br>
 <br>
 
-📌 Problem Statement & Project Description[#Problem-Statement-&-Project-Description]
-🧰 Technologies, Tools & Data Sources Used[#Technologies,-Tools-&-Data-Sources-Used]
-📊 Pipeline Diagram[#Pipeline-Diagram]
-🔄 Pipeline Explanation[#Pipeline-Explanation]
-🚀 Step-by-Step Replication Guide[#Step-by-Step-Replication-Guide]
-📊 Dashboard and Results[#Dashboard-and-Results]
+## 📚 Table of Contents
+
+- [📌 Problem Statement & Project Description](#problem-statement--project-description)
+- [🧰 Technologies, Tools & Data Sources Used](#technologies-tools--data-sources-used)
+- [📊 Pipeline Diagram](#pipeline-diagram)
+- [🔄 Pipeline Explanation](#pipeline-explanation)
+- [🚀 Step-by-Step Replication Guide](#step-by-step-replication-guide)
+- [📊 Dashboard and Results](#dashboard-and-results)
+
 
 📌 Problem Statement & Project Description
 <br>
