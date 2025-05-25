@@ -165,7 +165,7 @@ Setup Kestra:
     4) docker-compose up -d
     5) use port (http://localhost:8080/) to enter in kestra
     6) Inside kestra define you KV keys 
-    ![alt text](bike_project/kestra/KV_kestra.png)
+    7) copy all the flows in kestra folder and save it inside kestra
 
 Setup dbt core
   - create ~/.dbt/profiles.yml with the appropriate connection info (profiles_example.yml)
