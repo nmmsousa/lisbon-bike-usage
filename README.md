@@ -1,17 +1,15 @@
 
 ## 📚 Table of Contents
 
-- [📌 Problem Statement & Project Description](#problem-statement--project-description)
-- [🧰 Technologies, Tools & Data Sources Used](#technologies-tools--data-sources-used)
-- [📊 Pipeline Diagram](#pipeline-diagram)
-- [🔄 Pipeline Explanation](#pipeline-explanation)
-- [🚀 Step-by-Step Replication Guide](#step-by-step-replication-guide)
-- [📊 Dashboard and Results](#dashboard-and-results)
+- [📌 Problem Statement & Project Description](#-problem-statement--project-description)
+- [🧰 Technologies, Tools & Data Sources Used](#-technologies-tools--data-sources-used)
+- [📊 Pipeline Diagram](#-pipeline-diagram)
+- [🔄 Pipeline Explanation](#-pipeline-explanation)
+- [🚀 Step-by-Step Replication Guide](#-step-by-step-replication-guide)
+- [📊 Dashboard and Results](#-dashboard-and-results)
 
 
 ## 📌 Problem Statement & Project Description
-<br>
-<br>
 <br>
 Urban mobility is a key factor in developing sustainable, livable cities. Lisbon has made major investments in bike-sharing infrastructure through the Gira system and expanded its network of dedicated bike lanes. However, understanding how, when, and where citizens use these services remains a challenge.
 
@@ -62,7 +60,6 @@ Using a modern data stack (dbt, BigQuery, Kestra, Terraform), the project builds
   ![alt text](pipeline.png)
 
 
-<br>
 <br>
 <br>
 
