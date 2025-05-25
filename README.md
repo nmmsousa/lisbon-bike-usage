@@ -1,11 +1,3 @@
-# lisbon-bike-usage
-This project analyzes the usage patterns of Lisbon's Gira bike-sharing system using public data. Technologies: Python, Kestra, dbt, Terraform , Looker Data Studio
-
-<br>
-<br>
-<br>
-
-
 📌 Problem Statement & Project Description
 <br>
 <br>
@@ -81,6 +73,7 @@ Relevant Terraform variables are stored in variables.tf, and infrastructure defi
 
 
 Main Pipeline Components and Functions
+<br>
   Data Ingestion:
   - gira-realtime-fetch: Fetches real-time Gira station status data every 15 minutes and stores the resulting CSV in a Google Cloud Storage (GCS) bucket.
     Key Tasks:
@@ -96,12 +89,14 @@ Main Pipeline Components and Functions
       - purge_files: Cleans up temporary files after execution to avoid unnecessary storage usage.
 
   - upload-bikelanes-file-to-bigquery: Manually uploads a CSV file containing bike lane data into the BigQuery table bike_project.bike_lanes_data (ciclovias_lisboa.csv).
-
+<br>
+<br>
   Data Loading:
   - gira-daily-csv-to-bq: Loads Gira station data collected throughout the current day into BigQuery at 23:55 Lisbon time. The table is partitioned by hour based on the timestamp field.
     Key Tasks: 
         - load_to_bigquery: Load all CSVs from the current day's GCS folder into the bike_project.bike_data_row BigQuery table with hourly time partitioning.
-
+<br>
+<br>
   Data Transforming:
   - stg_bike_stations: A cleaned view of bike station locations, enriched with the best-available administrative label for geographic grouping.
   - stg_bike_lanes: A structured view of Lisbon’s bike lane network, ready for further analysis by type, segregation level, and village-level aggregation.
@@ -159,7 +154,7 @@ Setup Kestra:
     4) docker-compose up -d
     5) use port (http://localhost:8080/) to enter in kestra
     6) Inside kestra define you KV keys 
-    ![alt text](KV_kestra.png)
+    ![alt text](/home/nmmsousa/bike_project/kestraKV_kestra.png)
 
 Setup dbt core
   - create ~/.dbt/profiles.yml with the appropriate connection info (profiles_example.yml)
@@ -168,3 +163,34 @@ Setup dbt core
   - dbt debug
   - dbt run
 
+<br>
+<br>
+<br>
+
+Dashboard and Results
+<br>
+![alt text](dashboard.png)
+<br>
+Findings
+<br>
+
+  - Between 8 AM and 12 PM is definitely the time of day with the highest bicycle activity, while the period between 4 AM and 8 AM shows the lowest traffic.
+
+  - We can also understand the flow of trips between locations by calculating the average number of free bikes at each station in a given location, compared to the last 4 hours. Penha de França and Alto da Faia are clearly locations where people tend to start their trips, while Coração de Jesus and Sete Rios are destinations where more bikes become available due to people arriving.
+
+  - Saturdays and Sundays consistently show the lowest bike traffic, which likely indicates that the system is primarily used by commuters on weekdays.
+
+  - It's clear that locations with more bike stations generally experience more overall bike activity. However, there are some areas with well-developed bike lane infrastructure but fewer stations, which represents a strong opportunity to expand the bike-sharing network in those locations.
+<br>
+<br>
+Further investigation
+  
+  - Spot days or stations with unusual usage (e.g. sudden drop in availability).
+  
+  - Analyze how weather conditions affect bike usage.
+  
+  - Predict future availability at each station.
+  
+  - Group stations based on behavior (e.g. commuter vs residential use).
+  
+  - Combine bike data with public transport (e.g. metro, buses).
