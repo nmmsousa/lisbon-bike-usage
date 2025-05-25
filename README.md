@@ -1,6 +1,3 @@
-Contents
-<br>
-<br>
 
 ## 📚 Table of Contents
 
@@ -12,7 +9,7 @@ Contents
 - [📊 Dashboard and Results](#dashboard-and-results)
 
 
-📌 Problem Statement & Project Description
+## 📌 Problem Statement & Project Description
 <br>
 <br>
 <br>
@@ -35,7 +32,7 @@ Using a modern data stack (dbt, BigQuery, Kestra, Terraform), the project builds
 <br>
 
 
-🧰 Technologies, Tools & Data Sources Used
+## 🧰 Technologies, Tools & Data Sources Used
 
 🚲 Data Sources
   - Gira API: Real-time public API providing real-time station-level bike availability.
@@ -60,7 +57,7 @@ Using a modern data stack (dbt, BigQuery, Kestra, Terraform), the project builds
 <br>
 <br>
 
-📊 Pipeline Diagram
+## 📊 Pipeline Diagram
   
   ![alt text](pipeline.png)
 
@@ -69,7 +66,7 @@ Using a modern data stack (dbt, BigQuery, Kestra, Terraform), the project builds
 <br>
 <br>
 
-🔄 Pipeline Explanation
+## 🔄 Pipeline Explanation
 
 The pipeline is primarily orchestrated using Kestra, running inside Docker containers to ensure consistent, reproducible environments. The Docker image uses a lightweight Python 3.9 base image. For details on dependencies and environment setup, refer to the Dockercompose file and requirements.txt.
 
@@ -124,7 +121,7 @@ Main Pipeline Components and Functions
 <br>
 <br>
 
-🚀 Step-by-Step Replication Guide
+## 🚀 Step-by-Step Replication Guide
 
 Setup google cloud
   - Create a google cloud account
@@ -181,7 +178,7 @@ Setup dbt core
 <br>
 <br>
 
-📊 Dashboard and Results
+## 📊 Dashboard and Results
 <br>
 <br>
 
