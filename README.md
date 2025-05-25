@@ -1,11 +1,15 @@
 # lisbon-bike-usage
 This project analyzes the usage patterns of Lisbon's Gira bike-sharing system using public data. Technologies: Python, Kestra, dbt, Terraform , Looker Data Studio
 
-
+<br>
+<br>
+<br>
 
 
 📌 Problem Statement & Project Description
-
+<br>
+<br>
+<br>
 Urban mobility is a key factor in developing sustainable, livable cities. Lisbon has made major investments in bike-sharing infrastructure through the Gira system and expanded its network of dedicated bike lanes. However, understanding how, when, and where citizens use these services remains a challenge.
 
 This project — Lisbon bike usage — aims to analyze real-time and historical data from the Gira bike-sharing API to answer key questions such as:
@@ -20,7 +24,9 @@ This project — Lisbon bike usage — aims to analyze real-time and historical 
 
 Using a modern data stack (dbt, BigQuery, Kestra, Terraform), the project builds an automated data pipelines that collects, transforms, and analyzes bike availability real time data every 15 minutes. It models trends over time, enabling visualization and decision-making for urban planners, policy makers, and curious citizens.
 
-
+<br>
+<br>
+<br>
 
 
 🧰 Technologies, Tools & Data Sources Used
@@ -31,7 +37,8 @@ Using a modern data stack (dbt, BigQuery, Kestra, Terraform), the project builds
   - Openstreetmap API: editing API for fetching and saving raw geodata from/to the OpenStreetMap database
 
   - Lisbon Open Data: Dataset with official bike lane infrastructure, including length and location of each segment.
-  
+
+<br>  
 
 🛠️ Tools & Technologies
   - Kestra:	Workflow orchestration to schedule and execute data collection tasks.
@@ -42,18 +49,19 @@ Using a modern data stack (dbt, BigQuery, Kestra, Terraform), the project builds
   - Google Cloud Platform (GCP)
         - Google Cloud Storage (GCS) - Data Lake.
         - Big Query (BQ DWH) - Data warehouse.
-
   
-
-
+<br>
+<br>
+<br>
 
 📊 Pipeline Diagram
   
   ![alt text](pipeline.png)
 
 
-
-
+<br>
+<br>
+<br>
 
 🔄 Pipeline Explanation
 
@@ -95,16 +103,17 @@ Main Pipeline Components and Functions
         - load_to_bigquery: Load all CSVs from the current day's GCS folder into the bike_project.bike_data_row BigQuery table with hourly time partitioning.
 
   Data Transforming:
-    - stg_bike_stations: A cleaned view of bike station locations, enriched with the best-available administrative label for geographic grouping.
-    - stg_bike_lanes: A structured view of Lisbon’s bike lane network, ready for further analysis by type, segregation level, and village-level aggregation.
-    - stg_bike_lanes_by_village: A summarized view that enables spatial analysis of bike lane distribution across villages in Lisbon.
-    - mart_station_infra_coverage: Combines bike station and bike lane data to create a village-level fact table showing key infrastructure metrics.
-    - inc_bike_station_utilization_incremental: Aggregates bike station usage metrics over fixed 4-hour intervals, tracking availability of bikes and slots per station.
-    - mart_peak_hours_analysis: Analyzes hourly patterns of bike usage per station by calculating changes in average free bikes over 4-hour time intervals and aggregating them across time dimensions.
+  - stg_bike_stations: A cleaned view of bike station locations, enriched with the best-available administrative label for geographic grouping.
+  - stg_bike_lanes: A structured view of Lisbon’s bike lane network, ready for further analysis by type, segregation level, and village-level aggregation.
+  - stg_bike_lanes_by_village: A summarized view that enables spatial analysis of bike lane distribution across villages in Lisbon.
+  - mart_station_infra_coverage: Combines bike station and bike lane data to create a village-level fact table showing key infrastructure metrics.
+  - inc_bike_station_utilization_incremental: Aggregates bike station usage metrics over fixed 4-hour intervals, tracking availability of bikes and slots per station.
+  - mart_peak_hours_analysis: Analyzes hourly patterns of bike usage per station by calculating changes in average free bikes over 4-hour time intervals and aggregating them across time dimensions.
 
 
-
-
+<br>
+<br>
+<br>
 
 🚀 Step-by-Step Replication Guide
 
@@ -150,6 +159,7 @@ Setup Kestra:
     4) docker-compose up -d
     5) use port (http://localhost:8080/) to enter in kestra
     6) Inside kestra define you KV keys 
+    ![alt text](KV_kestra.png)
 
 Setup dbt core
   - create ~/.dbt/profiles.yml with the appropriate connection info (profiles_example.yml)
