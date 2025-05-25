@@ -165,7 +165,7 @@ Setup Kestra:
     4) docker-compose up -d
     5) use port (http://localhost:8080/) to enter in kestra
     6) Inside kestra define you KV keys 
-    ![alt text](/home/nmmsousa/bike_project/kestra/KV_kestra.png)
+    ![alt text](bike_project/kestra/KV_kestra.png)
 
 Setup dbt core
   - create ~/.dbt/profiles.yml with the appropriate connection info (profiles_example.yml)
