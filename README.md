@@ -23,7 +23,7 @@ This project — Lisbon bike usage — aims to analyze real-time and historical 
 
   - Do usage patterns differ between weekdays and weekends or during working vs. non-working hours?
 
-Using a modern data stack (dbt, BigQuery, Kestra, Terraform), the project builds an automated data pipelines that collects, transforms, and analyzes bike availability real time data every 15 minutes. It models trends over time, enabling visualization and decision-making for urban planners, policy makers, and curious citizens.
+Using a modern data stack (dbt, BigQuery, Kestra, Terraform, Looker Data Studio), the project builds an automated data pipelines that collects, transforms, and analyzes bike availability real time data every 15 minutes. It models trends over time, enabling visualization and decision-making for urban planners, policy makers, and curious citizens.
 
 <br>
 <br>
@@ -65,7 +65,7 @@ Using a modern data stack (dbt, BigQuery, Kestra, Terraform), the project builds
 
 ## 🔄 Pipeline Explanation
 
-The pipeline is primarily orchestrated using Kestra, running inside Docker containers to ensure consistent, reproducible environments. The Docker image uses a lightweight Python 3.9 base image. For details on dependencies and environment setup, refer to the Dockercompose file and requirements.txt.
+The pipeline is primarily orchestrated using Kestra, running inside Docker containers to ensure consistent, reproducible environments. The Docker Compose setup includes the Kestra image along with a PostgreSQL database used to persist Kestra’s data. Additionally, the compose file includes an extra PostgreSQL database and a pgAdmin service, which we are currently not using but were initially set up for potential needs. For details on dependencies and environment setup, refer to the Dockercompose file and requirements.txt.
 
 Kestra manages the orchestration and scheduling of pipeline tasks, such as calling the Gira API, loading data into Google Cloud Storage (GCS), and triggering BigQuery loading and dbt transformations.
 
@@ -82,6 +82,7 @@ Relevant Terraform variables are stored in variables.tf, and infrastructure defi
 
 Main Pipeline Components and Functions
 <br>
+
   Data Ingestion:
   - gira-realtime-fetch: Fetches real-time Gira station status data every 15 minutes and stores the resulting CSV in a Google Cloud Storage (GCS) bucket.
     Key Tasks:
@@ -100,12 +101,14 @@ Main Pipeline Components and Functions
 <br>
 <br>
   Data Loading:
+
   - gira-daily-csv-to-bq: Loads Gira station data collected throughout the current day into BigQuery at 23:55 Lisbon time. The table is partitioned by hour based on the timestamp field.
     Key Tasks: 
         - load_to_bigquery: Load all CSVs from the current day's GCS folder into the bike_project.bike_data_row BigQuery table with hourly time partitioning.
 <br>
 <br>
   Data Transforming:
+
   - stg_bike_stations: A cleaned view of bike station locations, enriched with the best-available administrative label for geographic grouping.
   - stg_bike_lanes: A structured view of Lisbon’s bike lane network, ready for further analysis by type, segregation level, and village-level aggregation.
   - stg_bike_lanes_by_village: A summarized view that enables spatial analysis of bike lane distribution across villages in Lisbon.
@@ -162,7 +165,7 @@ Setup Kestra:
     4) docker-compose up -d
     5) use port (http://localhost:8080/) to enter in kestra
     6) Inside kestra define you KV keys 
-    ![alt text](/home/nmmsousa/bike_project/kestraKV_kestra.png)
+    ![alt text](/home/nmmsousa/bike_project/kestra/KV_kestra.png)
 
 Setup dbt core
   - create ~/.dbt/profiles.yml with the appropriate connection info (profiles_example.yml)
