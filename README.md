@@ -1,3 +1,14 @@
+Contents
+<br>
+<br>
+
+📌 Problem Statement & Project Description[#Problem-Statement-&-Project-Description]
+🧰 Technologies, Tools & Data Sources Used[#Technologies,-Tools-&-Data-Sources-Used]
+📊 Pipeline Diagram[#Pipeline-Diagram]
+🔄 Pipeline Explanation[#Pipeline-Explanation]
+🚀 Step-by-Step Replication Guide[#Step-by-Step-Replication-Guide]
+📊 Dashboard and Results[#Dashboard-and-Results]
+
 📌 Problem Statement & Project Description
 <br>
 <br>
@@ -167,10 +178,14 @@ Setup dbt core
 <br>
 <br>
 
-Dashboard and Results
+📊 Dashboard and Results
 <br>
+<br>
+
 ![alt text](dashboard.png)
 <br>
+<br>
+
 Findings
 <br>
 
