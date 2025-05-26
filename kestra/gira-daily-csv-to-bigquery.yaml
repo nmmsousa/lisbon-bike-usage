@@ -1,0 +1,36 @@
+id: gira-daily-csv-to-bq
+namespace: bike-project.etl
+description: Load yesterday’s Gira CSV files from GCS into BigQuery daily at 2AM
+
+triggers:
+  - id: daily_trigger
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "55 23 * * *"  # Every day at 11:55 PM
+    timezone: Europe/Lisbon
+
+variables:
+  year: "{{ now(format='yyyy') }}"
+  month: "{{ now(format='MM') }}"
+  day: "{{ now(format='dd') }}"
+
+
+tasks:
+  - id: load_to_bigquery
+    type: "io.kestra.plugin.gcp.bigquery.LoadFromGcs"
+    from: ["gs://{{render(kv('GCP_BUCKET_NAME'))}}/gira_realtime_data/year={{ render(vars.year) }}/month={{ render(vars.month) }}/day={{ render(vars.day) }}/*.csv"]
+    createDisposition: CREATE_IF_NEEDED
+    destinationTable: "bike_project.bike_data_row"
+    format: CSV
+    csvOptions:  
+      fieldDelimiter: ","
+    timePartitioningField: "timestamp"
+    timePartitioningType: HOUR
+    autodetect: true
+
+pluginDefaults:
+  - type: io.kestra.plugin.gcp
+    values:
+      serviceAccount: "{{kv('GCP_CREDS')}}"
+      projectId: "{{kv('GCP_PROJECT_ID')}}"
+      location: "{{kv('GCP_LOCATION')}}"
+      bucket: "{{kv('GCP_BUCKET_NAME')}}"

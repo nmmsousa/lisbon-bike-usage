@@ -1,0 +1,74 @@
+id: gira-realtime-fetch
+namespace: bike-project.etl
+description: Fetch real-time Gira station status every 15 minutes and save to GCS
+
+triggers:
+  - id: every_15_minutes
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "*/15 * * * *"
+    timezone: Europe/Lisbon
+
+variables:
+  gira_API: "https://api.citybik.es/v2/networks/gira"
+  gcs_path_prefix: "gira_realtime_data"
+  year: "{{ now(format='yyyy') }}"
+  month: "{{ now(format='MM') }}"
+  day: "{{ now(format='dd') }}"
+  hour: "{{ now(format='HH') }}"
+
+tasks:
+  - id: fetch_gira_data
+    type: io.kestra.plugin.scripts.python.Script
+    containerImage: python:3.11-slim
+    beforeCommands:
+      - pip install pandas requests
+    script: |
+      import requests
+      import pandas as pd
+      from datetime import datetime
+
+      url = "{{vars.gira_API}}"
+      response = requests.get(url)
+
+      if response.status_code == 200:
+          stations = response.json()['network']['stations']
+          now = datetime.utcnow().isoformat()
+
+          data = []
+          for s in stations:
+              data.append({
+                  "timestamp": now,
+                  "id": s.get("id"),
+                  "name": s.get("name"),
+                  "latitude": s.get("latitude"),
+                  "longitude": s.get("longitude"),
+                  "free_bikes": s.get("free_bikes"),
+                  "empty_slots": s.get("empty_slots"),
+                  "slots": s.get("extra", {}).get("slots"),
+              })
+
+          df = pd.DataFrame(data)
+          filename = f"gira_realtime_{now.replace(':', '-').replace('.', '-')}.csv"
+          df.to_csv(filename, index=False)
+          print(f"✅ Saved real-time data to {filename}")
+      else:
+          raise Exception(f"Failed to fetch data. Status code: {response.status_code}")
+    outputFiles:
+      - gira_realtime_*.csv
+
+  - id: upload_to_gcs
+    type: io.kestra.plugin.gcp.gcs.Upload
+    from: "{{ outputs.fetch_gira_data.outputFiles | values | first }}"
+    to: "gs://{{kv('GCP_BUCKET_NAME')}}/{{vars.gcs_path_prefix}}/year={{vars.year}}/month={{vars.month}}/day={{vars.day}}/hour={{vars.hour}}/{{ outputs.fetch_gira_data.outputFiles | values | first | split('/') | last }}"
+    contentType: text/csv
+
+  - id: purge_temp_files
+    type: io.kestra.plugin.core.storage.PurgeCurrentExecutionFiles
+
+pluginDefaults:
+  - type: io.kestra.plugin.gcp
+    values:
+      serviceAccount: "{{kv('GCP_CREDS')}}"
+      projectId: "{{kv('GCP_PROJECT_ID')}}"
+      location: "{{kv('GCP_LOCATION')}}"
+      bucket: "{{kv('GCP_BUCKET_NAME')}}"

@@ -1,0 +1,118 @@
+id: gira-station-location
+namespace: bike-project.etl
+description: Using OpenStreetMap API to get all the locations for each bike station
+
+variables: 
+    openstreetmap_API: https://nominatim.openstreetmap.org/reverse
+    gira_API: "https://api.citybik.es/v2/networks/gira"
+    gcs_file: "gs://{{kv('GCP_BUCKET_NAME')}}/gira_station_locations/gira_station_location"
+    year: "{{ now(format='yyyy') }}"
+    month: "{{ now(format='MM') }}"
+    day: "{{ now(format='dd') }}"
+
+tasks:
+  - id: run_python_script
+    type: io.kestra.plugin.scripts.python.Script
+    containerImage: python:3.11-slim
+    beforeCommands:
+        - pip install pandas requests
+    script: |
+      import requests
+      import pandas as pd
+
+      def get_freguesia(lat, lon):
+          url = "{{vars.openstreetmap_API}}"
+          params = {
+              'lat': lat,
+              'lon': lon,
+              'format': 'json',
+              'zoom': 14,
+              'addressdetails': 1
+          }
+          headers = {'User-Agent': 'CityBikes-ETL-Script'}
+          try:
+              response = requests.get(url, params=params, headers=headers)
+              if response.status_code == 200:
+                  data = response.json()
+                  address = data.get('address', {})
+                  return {
+                      'suburb': address.get('suburb', None),
+                      'neighbourhood': address.get('neighbourhood', None),
+                      'city_district': address.get('city_district', None),
+                      'village': address.get('village', None)
+                  }
+              else:
+                  print(f"Geocode error {response.status_code}: {response.text}")
+                  return None
+          except Exception as e:
+              print(f"Geocode request failed: {e}")
+              return None
+
+      # Step 1: Access Gira network info from CityBikes API
+      citybikes_url = "{{vars.gira_API}}"
+      response = requests.get(citybikes_url)
+
+      if response.status_code == 200:
+          stations = response.json()['network']['stations']
+          station_data = []
+
+          for i, station in enumerate(stations):
+              lat = station['latitude']
+              lon = station['longitude']
+              name = station['name']
+              slots = station['extra']['slots']
+
+              # Step 2: Get freguesia
+              freguesia = get_freguesia(lat, lon)
+
+              station_data.append({
+                  'name': name,
+                  'latitude': lat,
+                  'longitude': lon,
+                  'slots': slots,
+                  'suburb': freguesia.get('suburb') if freguesia else None,
+                  'neighbourhood': freguesia.get('neighbourhood') if freguesia else None,
+                  'city_district': freguesia.get('city_district') if freguesia else None,
+                  'village': freguesia.get('village') if freguesia else None
+              })
+
+          # Step 3: Convert to DataFrame and export to CSV
+          df = pd.DataFrame(station_data)
+          df.to_csv("gira_station_status.csv", index=False)
+          print("✅ Data saved to 'gira_station_status.csv'.")
+      else:
+          print(f"Failed to fetch data from CityBikes API. Status code: {response.status_code}")
+    outputFiles:
+      - gira_station_status.csv
+
+
+  - id: upload_to_gcs
+    type: io.kestra.plugin.gcp.gcs.Upload
+    from: "{{ outputs.run_python_script.outputFiles['gira_station_status.csv'] }}"
+    to: "{{vars.gcs_file}}-{{ vars.year }}-{{ vars.month }}-{{ vars.day }}"
+    contentType: text/csv
+
+
+  - id: load_to_bigquery
+    type: "io.kestra.plugin.gcp.bigquery.LoadFromGcs"
+    from: ["gs://{{render(kv('GCP_BUCKET_NAME'))}}/gira_station_locations/gira_station_location-{{ render(vars.year) }}-{{ render(vars.month) }}-{{ render(vars.day) }}"]
+    createDisposition: CREATE_IF_NEEDED
+    destinationTable: "bike_project.gira_station_locations"
+    format: CSV
+    csvOptions:  
+      fieldDelimiter: ","
+    autodetect: true
+    writeDisposition: WRITE_TRUNCATE
+
+
+  - id: purge_files
+    type: io.kestra.plugin.core.storage.PurgeCurrentExecutionFiles
+    description: To avoid cluttering storage, we will remove the downloaded files
+
+pluginDefaults:
+  - type: io.kestra.plugin.gcp
+    values:
+      serviceAccount: "{{kv('GCP_CREDS')}}"
+      projectId: "{{kv('GCP_PROJECT_ID')}}"
+      location: "{{kv('GCP_LOCATION')}}"
+      bucket: "{{kv('GCP_BUCKET_NAME')}}"
