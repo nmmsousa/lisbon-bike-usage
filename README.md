@@ -5,7 +5,7 @@
 - [🧰 Technologies, Tools & Data Sources Used](#-technologies-tools--data-sources-used)
 - [📊 Pipeline Diagram](#-pipeline-diagram)
 - [🔄 Pipeline Explanation](#-pipeline-explanation)
-- 🧬 Main Pipeline Components and Functions(-main-pipeline-components-and-functions)
+- [🧬 Main Pipeline Components and Functions](-main-pipeline-components-and-functions)
 - [🚀 Step-by-Step Replication Guide](#-step-by-step-replication-guide)
 - [📊 Dashboard and Results](#-dashboard-and-results)
 
