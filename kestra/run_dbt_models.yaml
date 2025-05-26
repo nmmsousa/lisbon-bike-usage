@@ -1,0 +1,64 @@
+id: run_dbt_models
+namespace: bike-project.etl
+inputs:
+  - id: dbt_command
+    type: SELECT
+    allowCustomValue: true
+    defaults: dbt build
+    values:
+      - dbt run --select stg_bike_lanes
+      - dbt run --select stg_bike_lanes_by_village
+      - dbt run --select stg_bike_stations
+      - dbt run --select mart_peak_hours_analysis
+      - dbt run --select mart_station_infra_coverage
+      - dbt run --select inc_bike_station_utilization_incremental
+
+triggers:
+  - id: daily_1am
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 1 * * *"
+    timezone: Europe/Lisbon
+
+tasks:
+  - id: sync
+    type: io.kestra.plugin.git.SyncNamespaceFiles
+    url: https://github.com/nmmsousa/lisbon-bike-usage.git
+    branch: main
+    namespace: "{{flow.namespace}}"
+    gitDirectory: dbt_core
+    dryRun: false
+    # disabled: true # this Git Sync is needed only when running it the first time, afterwards the task can be disabled
+
+  - id: dbt-build
+    type: io.kestra.plugin.dbt.cli.DbtCLI
+    env:
+      DBT_DATABASE: "{{kv('GCP_PROJECT_ID')}}"
+      DBT_SCHEMA: "{{kv('GCP_DATASET')}}"
+    namespaceFiles:
+      enabled: true
+    containerImage: ghcr.io/kestra-io/dbt-bigquery:latest
+    taskRunner:
+      type: io.kestra.plugin.scripts.runner.docker.Docker
+    inputFiles:
+      sa.json: "{{kv('GCP_CREDS')}}"
+    commands:
+      - dbt deps
+      - "{{ inputs.dbt_command }}"
+    storeManifest:
+      key: manifest.json
+      namespace: "{{ flow.namespace }}"
+    profiles: |
+      bike_project:
+        outputs:
+          dev:
+            type: bigquery
+            dataset: "{{kv('GCP_DATASET')}}"
+            project: "{{kv('GCP_PROJECT_ID')}}"
+            location: "{{kv('GCP_LOCATION')}}"
+            keyfile: sa.json
+            method: service-account
+            priority: interactive
+            threads: 16
+            timeout_seconds: 300
+            fixed_retries: 1
+        target: dev
