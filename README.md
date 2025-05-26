@@ -5,6 +5,7 @@
 - [🧰 Technologies, Tools & Data Sources Used](#-technologies-tools--data-sources-used)
 - [📊 Pipeline Diagram](#-pipeline-diagram)
 - [🔄 Pipeline Explanation](#-pipeline-explanation)
+- 🧬 Main Pipeline Components and Functions(-main-pipeline-components-and-functions)
 - [🚀 Step-by-Step Replication Guide](#-step-by-step-replication-guide)
 - [📊 Dashboard and Results](#-dashboard-and-results)
 
@@ -80,7 +81,7 @@ Terraform is used to provision and manage the Google Cloud Platform (GCP) resour
 Relevant Terraform variables are stored in variables.tf, and infrastructure definitions are in main.tf. Given the relatively small data size, resource configurations are optimized for cost-efficiency.
 
 
-Main Pipeline Components and Functions
+🧬 Main Pipeline Components and Functions
 <br>
 
   Data Ingestion:
@@ -186,12 +187,14 @@ Setup dbt core
 <br>
 <br>
 
+You can find the report [here](https://lookerstudio.google.com/reporting/982d0231-3e88-46fa-af25-fa25fc63f852)
+
 Findings
 <br>
 
   - Between 8 AM and 12 PM is definitely the time of day with the highest bicycle activity, while the period between 4 AM and 8 AM shows the lowest traffic.
 
-  - We can also understand the flow of trips between locations by calculating the average number of free bikes at each station in a given location, compared to the last 4 hours. Penha de França and Alto da Faia are clearly locations where people tend to start their trips, while Coração de Jesus and Sete Rios are destinations where more bikes become available due to people arriving.
+  - We can also understand the flow of trips between locations by calculating the average number of free bikes at each station in a given location, compared to the last 4 hours. Penha de França and Alto da Faia are clearly locations where people tend to start their trips in the moorning, while Coração de Jesus and Sete Rios are destinations where more bikes become available due to people arriving. The flow in opposite directions happens in the afternoon, possibly explained by a people jobs flow.
 
   - Saturdays and Sundays consistently show the lowest bike traffic, which likely indicates that the system is primarily used by commuters on weekdays.
 
