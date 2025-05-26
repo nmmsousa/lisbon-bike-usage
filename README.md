@@ -81,7 +81,7 @@ Terraform is used to provision and manage the Google Cloud Platform (GCP) resour
 Relevant Terraform variables are stored in variables.tf, and infrastructure definitions are in main.tf. Given the relatively small data size, resource configurations are optimized for cost-efficiency.
 
 
-🧬 Main Pipeline Components and Functions
+## 🧬 Main Pipeline Components and Functions
 <br>
 
   Data Ingestion:
